@@ -62,13 +62,16 @@ def go_to_start(start_room:int, end_room:int=None) -> t.Vec2D:
     Returns:
         cursor location
     """
-    movement = -80 if room_start % 2 == 0 else 80
+    movement = -80 if floor_start % 2 == 0 else 80
+    movement
     t.setposition(ROOM_X[room_start], Y_START + movement)
 
     if end_room is None:
         t.pendown()
         t.circle(10)
+        return False
     t.penup()
+    return True
     
 def leave_classroom():
     """
@@ -116,37 +119,62 @@ def enter_classroom():
     movement = -80 if room_end % 2 == 0 else 80
     t.goto(t.xcor(), t.ycor() + movement)
 
-def display_path(friend_start:int, friend_end:int=None, you_start:int=None, you_end:int=None):
-    global floor_start, room_start, floor_end, room_end
-    floor_start, room_start = split_floor_room(friend_start)
-    floor_end, room_end = split_floor_room(friend_end) # if friend_end else (floor_start)
+def draw_path(rm_start:int, rm_end:int):
+    if go_to_start(rm_start, rm_end):
+        t.pendown()
+        leave_classroom()
+        hall_move()
+        enter_classroom()
+    t.penup()
 
-    if floor_start == floor_end: 
-        t.bgpic('floors_1.png') 
-    else:
+# def display_paths(friend_start:int, friend_end:int=None, you_start:int=None, you_end:int=None):
+def display_paths(moves:list[tuple[int,int]]):
+    global floor_start, room_start, floor_end, room_end
+    for m in moves:
+        s,e = m
+    
+        floor_start, room_start = split_floor_room(s)
+        floor_end, room_end = split_floor_room(e) if e else (floor_start, None)
+
+        # if floor_start == floor_end: 
+        #     t.bgpic('floors_1.png') 
+        # else:
+        #     t.bgpic('floors_2.png')
         t.bgpic('floors_2.png')
 
-    t.penup()
-    t.goto(-240, Y_START)
-    t.write(f'{friend_start},{friend_end}')
-    go_to_start(friend_start, friend_end)
-    t.pendown()
-    leave_classroom()
-    hall_move()
-    enter_classroom()
-    t.penup()
+        t.penup()
+        t.goto(-240, Y_START)
+        t.write(f'{s},{e}')
+        pc = 'blue' if m == moves[0] else 'red'
+        t.pencolor(pc)
+        draw_path(s,e)
+        # if go_to_start(friend_start, friend_end):
+        #     t.pendown()
+        #     leave_classroom()
+        #     hall_move()
+        #     enter_classroom()
+        # t.penup()
     if __name__ != '__main__':
         t.mainloop()
 
     # t.mainloop()
 
 if __name__ == '__main__':
+    moves = []
     t.speed(10)
     for i in range(101, 111):
         for j in range(101, 111):
-            display_path(i, j)
-            t.clear()
+            if len(moves) < 2:
+                moves.append((i,j))
+            else:
+                display_paths(moves)
+                moves= []
+                t.clear()
         for j in range(201, 211):
-            display_path(i, j)
-            t.clear()
+            if len(moves) < 2:
+                moves.append((i,j))
+            else:
+                display_paths(moves)
+                moves = []
+                t.clear()
     t.speed(6)

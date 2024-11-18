@@ -102,5 +102,4 @@ else:
 
 if __name__ == '__main__':
     
-    floor.display_path(107,108)
-#>>>>>>> main
+    floor.display_paths([(107,None),(103, None)])
