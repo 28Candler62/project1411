@@ -4,7 +4,7 @@ def name_input():
     while name not name.isalpha():
         name = input('The name needs to contain letters only')
     return name
-def c_name():
+def c_name(): 
     c_name = input('Enter the class name and number: ')
     return c_name
 def class_start():
@@ -26,17 +26,21 @@ import floor
 #>>>>>>> main
 
 def main():
+    x= "y"
     data_file = 'project_data_file.csv'
-    input_name = name_input()
-    input_class = c_name()
-    input_s_time = class_start()
-    input_e_time = class_end()
-    input_room_number = room_number()
-
+    while x == 'Y' or x == 'y':
+        input_name = name_input()
+        input_class = c_name()
+        input_s_time = class_start()
+        input_e_time = class_end()
+        input_room_number = room_number()
+        with open(data_file, '+at') as f:
+            f.write(f"{input_name},{input_class},{input_s_time},{input_e_time},{input_room_number}\n")
+        x = input('Would you like to create another schedule again? Y for yes or N for no: ')
+    
     room_number_digits = [int(i) for i in str(input_room_number)]
 
-    with open(data_file, '+at') as f:
-        f.write(f"{input_name},{input_class},{input_s_time},{input_e_time},{input_room_number}\n")
+    
 
     with open(data_file, 'r') as f:
         # current/last place
