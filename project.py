@@ -4,7 +4,7 @@ def name_input():
     while name not name.isalpha():
         name = input('The name needs to contain letters only')
     return name
-def c_name():
+def c_name(): 
     c_name = input('Enter the class name and number: ')
     return c_name
 def class_start():
